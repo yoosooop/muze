@@ -15,8 +15,9 @@ module.exports = {
         // 등록돼있는 UUID인지 확인
         const user = await UserModel.getUserByUUID(uuid);
         if (user[0] === undefined) {
-            // 등록돼있지 않을 때
+            // 등록돼있지 않을 때 
             const payload = await UserModel.signUp(uuid);
+            
             if (payload.userIdx === -1) {
                 return res.status(CODE.DB_ERROR).send(util.fail(CODE.DB_ERROR, MSG.DB_ERROR));
             }
@@ -24,6 +25,7 @@ module.exports = {
                 const { token, refreshToken } = await jwt.sign(payload);
                 res.status(CODE.OK).send(util.success(CODE.OK, MSG.CREATED_USER ));
             }
+            
         }
         else {
             // 등록돼있을 때
@@ -32,10 +34,3 @@ module.exports = {
         }
     }
 }
-
-/*
-else {
-                const { token, refreshToken } = await jwt.sign(payload);
-                res.status(CODE.OK).send(util.success(CODE.OK, MSG.CREATED_USER, { accessToken: token, nickname: payload.nickname, gender: payload.gender, image: payload.image, badge: payload.badge, win: 0, lose: 0 }));
-            }
-*/
