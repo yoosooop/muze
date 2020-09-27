@@ -1,15 +1,16 @@
 const jwt = require('jsonwebtoken');
-const secretKey = require('../config/secretKey').secretKey;
-const options = require('../config/secretKey').options;
-const refreshOptions = require('../config/secretKey').refreshOptions;
+const dbConfig = require('../config/dbConfig');
+const options = require('../config/dbConfig').options;
+const refreshOptions = require('../config/dbConfig').refreshOptions;
 const UserModel = require('../models/user');
+const secertOrPrivatekey = 'jwtSecertKey';
 const TOKEN_EXPIRED = -3;
 const TOKEN_INVALID = -2;
 
 module.exports = {
     sign: async (user) => {
         payload = {
-            userIdx: user.user_idx,
+            userIdx: user.userIdx,
             uuid: user.uuid,
             gender: user.gender,
             nickname: user.nickname,
@@ -17,8 +18,8 @@ module.exports = {
             badge: user.badge
         }
         const result = {
-            token: jwt.sign(payload, secretKey, options),
-            refreshToken: jwt.sign(payload, secretKey, refreshOptions)
+            token: jwt.sign(payload, secertOrPrivatekey, options),
+            refreshToken: jwt.sign(payload, secertOrPrivatekey, refreshOptions)
         };
         // await UserModel.updateRefreshToken(payload.userIdx, result.refreshToken);
         return result;
@@ -26,7 +27,7 @@ module.exports = {
     verify: async (token) => {
         let decoded;
         try {
-            decoded = jwt.verify(token, secretKey);
+            decoded = jwt.verify(token, secertOrPrivatekey);
         } catch (err) {
             if (err.message === 'jwt expired') {
                 console.log('expired token');
@@ -44,7 +45,7 @@ module.exports = {
     },
     refresh: async (refreshToken) => {
         try {
-            const result = jwt.verify(refreshToken, secretKey);
+            const result = jwt.verify(refreshToken, secertOrPrivatekey);
             if (result.userIdx === undefined) {
                 return TOKEN_INVALID;
             }
@@ -58,8 +59,8 @@ module.exports = {
                 name: user[0].name
             };
             const dto = {
-                token: jwt.sign(payload, secretKey, options),
-                refreshToken: jwt.sign(payload, secretKey, refreshOptions)
+                token: jwt.sign(payload,secertOrPrivatekey, options),
+                refreshToken: jwt.sign(payload, secertOrPrivatekey, refreshOptions)
             };
             await UserModel.updateRefreshToken(payload.userIdx, dto.refreshToken);
             return dto;
