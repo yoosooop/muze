@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const multer = require('multer');
-const userController = require("../controllers/place");
+const userController = require("../controllers/photo");
+const upload = require('../modules/multer');
 
 /* GET users listing. */
 //router.post('/signUUID', userController.signUUID);
@@ -22,7 +23,7 @@ const userController = require("../controllers/place");
 });
 */
 
-router.post('/', userController.addphoto);
+router.post('/', upload.single('imageFile'),userController.addphoto);
 
 /*
 //사용자가 선택한 이미지 보여주기

@@ -8,13 +8,12 @@ const photoDB = require('../models/photo');
 
 module.exports = {
     addphoto:async(req,res) =>{
-        const imageFile = req.file.path;
-
-
+        const imageFile = req.file;
+        //const imageUrl = imageFile.map((img) => img.location);
         if (imageFile === undefined || imageFile.length === 0) {
             console.log('이미지 입력해주세요.');
             return res
-                .status(statusCode.BAD_REQUEST)
+                .status(statusCode.BAD_RcEQUEST)
                 .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE));
         }
     }

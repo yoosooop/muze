@@ -7,7 +7,7 @@ const photo = {
     addPhoto : async({
         imageUrl
     })=>{
-        const addPhotoQuery = `Insert INTO muze.image (${photoImageTB}) values (?)`;
+        const addPhotoQuery = `Insert INTO muze.image (imageUrl) values (?)`;
         try {
             await pool
                 .Transaction(async (conn) => {
