@@ -38,4 +38,31 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+const mvae = require('@magenta/music/node/music_vae');
+const core = require('@magenta/music/node/core');
+
+const model = new mvae.MusicVAE('./music/checkpoints');
+const player = new core.Player();
+
+mvae.initialize();
+
+function playVAE(){
+  if (player.isPlaying()){
+    player.stop();
+    return;
+  }
+  mvae
+  .sample(1,vae_temperature)
+  .then((sample)=> player.start(sample[0]))
+}
+
+/*
+model
+  .initialize()
+  .then(() => model.sample(1))
+  .then(samples => {
+    player.resumeContext();
+    player.start(samples[0])
+  });
+*/
 module.exports = app;
